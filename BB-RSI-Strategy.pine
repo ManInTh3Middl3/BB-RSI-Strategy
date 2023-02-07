@@ -1,0 +1,36 @@
+// This source code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © ManInTh3Middl3
+
+//@version=2
+strategy("Bollinger Bands with RSI")
+
+// Define the Bollinger Bands
+bb_upper = sma(close, 20) + 2 * stdev(close, 20)
+bb_middle = sma(close, 20)
+bb_lower = sma(close, 20)
+
+// Define the RSI
+rsiValue = rsi(close, 14)
+
+// Buy when price crosses above the upper Bollinger Band
+if crossover(close, bb_upper) and rsiValue < 70
+    strategy.entry("Buy", strategy.long)
+
+// Sell when price crosses below the lower Bollinger Band
+if crossunder(close, bb_lower) and rsiValue > 30
+    strategy.entry("Sell", strategy.short)
+
+// Exit position when price crosses the middle Bollinger Band
+if crossover(close, bb_middle)
+    strategy.close("Buy")
+
+if crossunder(close, bb_middle)
+    strategy.close("Sell")
+
+// Plot the Bollinger Bands
+plot(bb_upper, color=purple)
+plot(bb_middle, color=black)
+plot(bb_lower, color=purple)
+
+// Plot the RSI
+plot(rsiValue, color=blue)
